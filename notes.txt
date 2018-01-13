@@ -1,0 +1,8 @@
+change dmlc-core/include/dmlc/base.h line 45
+same in rabit/include/dmlc/base.h
+
+
+#if (!defined(DMLC_LOG_STACK_TRACE) && defined(__GNUC__) && !defined(__MINGW32__))
+#define DMLC_LOG_STACK_TRACE 1
+#undef DMLC_LOG_STACK_TRACE
+#endif

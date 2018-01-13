@@ -38,5 +38,8 @@
     "eslint-plugin-jest": "^21.6.1",
     "jest": "^21.1.0",
     "npm-run-all": "^4.1.1"
+  },
+  "dependencies": {
+    "ml-matrix": "^5.0.1"
   }
 }

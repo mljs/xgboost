@@ -1,4 +1,3 @@
-
 CC = emcc
 CXX = em++
 
@@ -10,20 +9,23 @@ ifndef DMLC_CORE
 	DMLC_CORE = xgboost/dmlc-core
 endif
 
-CFLAGS = -std=c++11 -Wall -O3 -fPIC --memory-init-file 0
-CFLAGS += -I$(DMLC_CORE)/include -I$(RABIT)/include -I$(GTEST_PATH)/include
+CFLAGS = -g -O2 -Wall -fPIC --memory-init-file 0 -std=c++11
+CFLAGS += -I$(DMLC_CORE)/include -I$(RABIT)/include -Ixgboost/include
 BUILD_DIR=dist
-EXPORTED_FUNCTIONS="['_create_model', '_set_param', '_train', '_predict', '_free_memory_model', '_free_memory_matrix']"
-COMPILED_FILES = xgboost/lib/libxgboost.bc
+EXPORTED_FUNCTIONS="['_create_model', '_set_param', '_train_full_model', '_predict_one', '_free_memory_model']"
+COMPILED_FILES = xgboost/lib/libxgboost.so
 
 all:
-	cd xgboost; make config=make/minimum.mk; cd ..;
+	cd xgboost; make -j4 config=../make/minimum.mk; cd ..;
 	mkdir -p $(BUILD_DIR)/wasm;
-	$(CXX) $(CFLAGS) js-interfaces.c $(COMPILED_FILES) -o $(BUILD_DIR)/wasm/xgboost.js --pre-js src/wasmPreJS.js -s -s BINARYEN_ASYNC_COMPILATION=1 -s NO_FILESYSTEM=1 -s BINARYEN=1 -s "BINARYEN_METHOD='native-wasm'" -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS)
+	$(CXX) $(CFLAGS) js-interfaces.cpp $(COMPILED_FILES) -o $(BUILD_DIR)/wasm/xgboost.js --pre-js src/wasmPreJS.js -s WASM=1 -s "BINARYEN_METHOD='native-wasm'" -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS) -s SAFE_HEAP=1
+	#mkdir -p $(BUILD_DIR)/asm;
+	#$(CXX) $(CFLAGS) js-interfaces.cpp $(COMPILED_FILES) -o $(BUILD_DIR)/asm/xgboost.js --pre-js src/asmPreJS.js -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS) -s ASSERTIONS=10 -s ALLOW_MEMORY_GROWTH=1
 
+clean:
+	cd xgboost; make clean_all; cd ..
 
-#asm: js-interfaces.c svm.o libsvm/svm.h
-#	mkdir -p $(BUILD_DIR)/asm; $(CC) $(CFLAGS) js-interfaces.c svm.o -o $(BUILD_DIR)/asm/libsvm.js --pre-js src/asmPreJS.js -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS)
-
-#clean:
-#	rm -f *~ js-interfaces.o ./svm.o
+test:
+	cd xgboost; make -j4 config=make/minimum.mk; cd ..;
+	$(CXX) $(CFLAGS) js-interfaces.cpp -c
+	$(CXX) $(CFLAGS) main.cpp -o main.html $(COMPILED_FILES) -s ASSERTIONS=1 -s WASM=1 js-interfaces.o
