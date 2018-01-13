@@ -19,6 +19,31 @@
 const xgboost = require('ml-xgboost');
 ```
 
+## Development
+
+* You should have [emscripten](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) installed on your computer and be able to use `emcc` and `em++`.
+* Download the repo: `git clone --recursive https://github.com/mljs/xgboost`
+* change lines inside of the xgboost library files:
+    * dmlc-core/include/dmlc/base.h line 45 [here](./xgboost/dmlc-core/include/dmlc/base.h)
+    * rabit/include/dmlc/base.h line 45 [here](./xgboost/rabit/include/dmlc/base.h)
+
+       ```C++
+       #if (!defined(DMLC_LOG_STACK_TRACE) && defined(__GNUC__) && !defined(__MINGW32__))
+       #define DMLC_LOG_STACK_TRACE 1
+       #undef DMLC_LOG_STACK_TRACE
+       #endif
+       ```
+       **Note**: this is to avoid compilation issues with the execinfo.h library that is not needed in the JS library
+    * in case that you get the following error:
+
+        `./xgboost/include/xgboost/c_api.h:29:9: error: unknown type name 'uint64_t'`
+
+        just add this import at the beginning of [this](./xgboost/include/xgboost/c_api.h) file after the first `define`:
+
+        ```C++
+        #include <stdint.h>
+        ```
+* Run the `Makefile` at the root directory.
 
 ## License
 

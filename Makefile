@@ -23,7 +23,8 @@ all:
 	#$(CXX) $(CFLAGS) js-interfaces.cpp $(COMPILED_FILES) -o $(BUILD_DIR)/asm/xgboost.js --pre-js src/asmPreJS.js -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS) -s ASSERTIONS=10 -s ALLOW_MEMORY_GROWTH=1
 
 clean:
-	cd xgboost; make clean_all; cd ..
+	cd xgboost; make clean_all; cd ..;
+	rm -rf dist;
 
 test:
 	cd xgboost; make -j4 config=make/minimum.mk; cd ..;
