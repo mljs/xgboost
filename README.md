@@ -43,7 +43,7 @@ const xgboost = require('ml-xgboost');
         ```C++
         #include <stdint.h>
         ```
-* Run the `Makefile` at the root directory.
+* Run `npm run build` at the root directory.
 
 ## License
 

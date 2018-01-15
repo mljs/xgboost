@@ -10,11 +10,12 @@
     "dist"
   ],
   "scripts": {
+    "build": "rimraf dist && make clean && make",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
     "prepublishOnly": "rollup -c",
     "test": "run-s testonly eslint",
-    "testonly": "jest --coverage"
+    "testonly": "jest"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "eslint": "^4.6.1",
     "eslint-config-cheminfo": "^1.9.1",
     "eslint-plugin-jest": "^21.6.1",
+    "eslint-plugin-no-only-tests": "^2.0.0",
     "jest": "^21.1.0",
     "ml-confusion-matrix": "^0.3.0",
     "ml-dataset-iris": "^1.0.0",
@@ -42,6 +44,7 @@
     "rollup": "^0.49.2"
   },
   "dependencies": {
+    "libsvm-js": "^0.1.3",
     "ml-matrix": "^5.0.1"
   }
 }
