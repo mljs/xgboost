@@ -1,30 +1,40 @@
-var Matrix = require('ml-matrix').Matrix;
+import Matrix from 'ml-matrix';
 
-module.exports = function (xgboost) {
+export default function loadXGBoost(xgboost) {
     /* eslint-disable camelcase */
     const create_model = xgboost.cwrap('create_model', 'number', ['array', 'array', 'number', 'number']);
     const free_model = xgboost.cwrap('free_memory_model', null, ['number']);
     const set_param = xgboost.cwrap('set_param', null, ['number', 'string', 'string']);
     const train = xgboost.cwrap('train_full_model', null, ['number', 'number']);
     const predict_one = xgboost.cwrap('predict_one', 'number', ['number', 'array', 'number']);
-    /* eslint-enable camelcase */
 
     const defaultOptions = {
-        "booster": "gbtree",
-        "objective": "reg:linear",
-        "max_depth": "5",
-        "eta": "0.1",
-        "min_child_weight": "1",
-        "subsample": "0.5",
-        "colsample_bytree": "1",
-        "silent":"1"
+        booster: 'gbtree',
+        objective: 'reg:linear',
+        max_depth: 5,
+        eta: 0.1,
+        min_child_weight: 1,
+        subsample: 0.5,
+        colsample_bytree: 1,
+        silent: 1
     };
+    /* eslint-enable camelcase */
 
     class XGBoost {
         constructor(options) {
+            this.checkLabels = options.objective === 'multi:softmax';
+            this.options = Object.assign({}, defaultOptions, options);
+            for (var key in this.options) {
+                this.options[key] = this.options[key].toString();
+            }
         }
 
         train(data, labels) {
+            if (this.checkLabels) {
+                /* eslint-disable camelcase */
+                this.options.num_class = new Set(labels).size.toString();
+                /* eslint-enable camelcase */
+            }
 
             var X = Matrix.checkMatrix(data);
             var rows = X.rows;
@@ -32,12 +42,10 @@ module.exports = function (xgboost) {
 
             var flattenData = X.to1DArray();
             this.model = create_model(new Uint8Array(Float32Array.from(flattenData).buffer), new Uint8Array(Float32Array.from(labels).buffer), rows, cols);
-            console.log("model created");
-            var variables = Object.keys(defaultOptions);
-            for(var i = 0; i < variables.length; ++i) {
+            var variables = Object.keys(this.options);
+            for (var i = 0; i < variables.length; ++i) {
                 var variable = variables[i];
-                var value = defaultOptions[variable];
-                console.log(variable, value);
+                var value = this.options[variable];
                 set_param(this.model, variable, value);
             }
 
@@ -56,10 +64,9 @@ module.exports = function (xgboost) {
         }
 
         free() {
-            console.log("free");
             free_model(this.model);
         }
     }
 
     return XGBoost;
-};
+}
