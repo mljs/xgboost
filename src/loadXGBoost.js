@@ -7,6 +7,8 @@ export default function loadXGBoost(xgboost) {
     const set_param = xgboost.cwrap('set_param', null, ['number', 'string', 'string']);
     const train = xgboost.cwrap('train_full_model', null, ['number', 'number']);
     const predict_one = xgboost.cwrap('predict_one', 'number', ['number', 'array', 'number']);
+    const save_model = xgboost.cwrap('save_model', 'number', ['number']);
+    const load_model = xgboost.cwrap('load_model', 'number', ['string']);
 
     const defaultOptions = {
         booster: 'gbtree',
@@ -35,10 +37,17 @@ export default function loadXGBoost(xgboost) {
          * @param {number} [options.subsample=0.5]
          * @param {number} [options.colsample_bytree=1]
          * @param {number} [options.silent=1]
+         * @param {object} model - for load purposes.
          */
-        constructor(options) {
-            this.checkLabels = options.objective === 'multi:softmax';
-            this.options = Object.assign({}, defaultOptions, options);
+        constructor(options, model) {
+            if(options === true) {
+                this.model = load_model(model.model);
+                this.options = model.options;
+            } else {
+                this.checkLabels = options.objective === 'multi:softmax';
+                this.options = Object.assign({}, defaultOptions, options);
+            }
+
             for (var key in this.options) {
                 this.options[key] = this.options[key].toString();
             }
@@ -88,12 +97,32 @@ export default function loadXGBoost(xgboost) {
             return predictions;
         }
 
+        toJSON() {
+            if(!this.model) throw new Error('No model trained to save');
+            var modelPointer = save_model(this.model);
+            var model = xgboost.Pointer_stringify(modelPointer);
+            xgboost._free(modelPointer);
+            return {
+                name: 'ml-xgboost',
+                model: model,
+                options: this.options
+            };
+        }
+
+        static load(model) {
+            if(model.name !== 'ml-xgboost') {
+                throw new RangeError(`Invalid model: ${model.name}`);
+            }
+
+            return new XGBoost(true, model);
+        }
+
         /**
          * Free the memory allocated for the model. Since this memory is stored in the memory model of emscripten,
          * it is allocated within an ArrayBuffer and WILL NOT BE GARBARGE COLLECTED, you have to explicitly free it.
          * So not calling this will result in memory leaks. As of today in the browser, there is no way to hook the
          * garbage collection of the SVM object to free it automatically. Free the memory that was created by the
-         * compiled libsvm library to. store the model. This model is reused every time the predict method is called.
+         * compiled xgboost library to. store the model. This model is reused every time the predict method is called.
          */
         free() {
             free_model(this.model);

@@ -12,6 +12,7 @@ Module.isReady = new Promise(function (resolve) {
         resolve(Module);
     };
 });
+
 // The Module object: Our interface to the outside world. We import
 // and export values on it, and do the work to get that through
 // closure compiler if necessary. There are various ways Module can be used:
@@ -2076,7 +2077,7 @@ var ASM_CONSTS = [];
 
 STATIC_BASE = Runtime.GLOBAL_BASE;
 
-STATICTOP = STATIC_BASE + 82928;
+STATICTOP = STATIC_BASE + 82944;
 /* global initializers */  __ATINIT__.push({ func: function() { __GLOBAL__I_000101() } }, { func: function() { __GLOBAL__sub_I_tree_updater_cc() } }, { func: function() { __GLOBAL__sub_I_iostream_cpp() } }, { func: function() { __GLOBAL__sub_I_data_cc_1447() } }, { func: function() { __GLOBAL__sub_I_c_api_cc() } }, { func: function() { __GLOBAL__sub_I_gbm_cc() } }, { func: function() { __GLOBAL__sub_I_gblinear_cc() } }, { func: function() { __GLOBAL__sub_I_gbtree_cc() } }, { func: function() { __GLOBAL__sub_I_updater_fast_hist_cc() } }, { func: function() { __GLOBAL__sub_I_updater_skmaker_cc() } }, { func: function() { __GLOBAL__sub_I_updater_colmaker_cc() } }, { func: function() { __GLOBAL__sub_I_updater_sync_cc() } }, { func: function() { __GLOBAL__sub_I_tree_model_cc() } }, { func: function() { __GLOBAL__sub_I_updater_refresh_cc() } }, { func: function() { __GLOBAL__sub_I_updater_histmaker_cc() } }, { func: function() { __GLOBAL__sub_I_learner_cc() } }, { func: function() { __GLOBAL__sub_I_updater_prune_cc() } }, { func: function() { __GLOBAL__sub_I_sparse_page_raw_format_cc() } }, { func: function() { __GLOBAL__sub_I_data_cc() } }, { func: function() { __GLOBAL__sub_I_regression_obj_cc() } }, { func: function() { __GLOBAL__sub_I_rank_obj_cc() } }, { func: function() { __GLOBAL__sub_I_objective_cc() } }, { func: function() { __GLOBAL__sub_I_multiclass_obj_cc() } }, { func: function() { __GLOBAL__sub_I_multiclass_metric_cc() } }, { func: function() { __GLOBAL__sub_I_elementwise_metric_cc() } }, { func: function() { __GLOBAL__sub_I_rank_metric_cc() } }, { func: function() { __GLOBAL__sub_I_metric_cc() } }, { func: function() { __GLOBAL__sub_I_cpu_predictor_cc() } }, { func: function() { __GLOBAL__sub_I_predictor_cc() } });
 
 
@@ -2085,7 +2086,7 @@ memoryInitializer = Module["wasmJSMethod"].indexOf("asmjs") >= 0 || Module["wasm
 
 
 
-var STATIC_BUMP = 82928;
+var STATIC_BUMP = 82944;
 Module["STATIC_BASE"] = STATIC_BASE;
 Module["STATIC_BUMP"] = STATIC_BUMP;
 
@@ -6487,7 +6488,7 @@ var asm =Module["asm"]// EMSCRIPTEN_END_ASM
 Module["asm"] = asm;
 var __GLOBAL__sub_I_c_api_cc = Module["__GLOBAL__sub_I_c_api_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_c_api_cc"].apply(null, arguments) };
 var _create_model = Module["_create_model"] = function() {  return Module["asm"]["_create_model"].apply(null, arguments) };
-var _set_param = Module["_set_param"] = function() {  return Module["asm"]["_set_param"].apply(null, arguments) };
+var _free_memory_model = Module["_free_memory_model"] = function() {  return Module["asm"]["_free_memory_model"].apply(null, arguments) };
 var __GLOBAL__sub_I_tree_updater_cc = Module["__GLOBAL__sub_I_tree_updater_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_tree_updater_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_multiclass_metric_cc = Module["__GLOBAL__sub_I_multiclass_metric_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_multiclass_metric_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_gblinear_cc = Module["__GLOBAL__sub_I_gblinear_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_gblinear_cc"].apply(null, arguments) };
@@ -6495,17 +6496,19 @@ var __GLOBAL__sub_I_updater_prune_cc = Module["__GLOBAL__sub_I_updater_prune_cc"
 var __GLOBAL__sub_I_data_cc_1447 = Module["__GLOBAL__sub_I_data_cc_1447"] = function() {  return Module["asm"]["__GLOBAL__sub_I_data_cc_1447"].apply(null, arguments) };
 var setDynamicTop = Module["setDynamicTop"] = function() {  return Module["asm"]["setDynamicTop"].apply(null, arguments) };
 var __GLOBAL__sub_I_data_cc = Module["__GLOBAL__sub_I_data_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_data_cc"].apply(null, arguments) };
+var _save_model = Module["_save_model"] = function() {  return Module["asm"]["_save_model"].apply(null, arguments) };
 var __GLOBAL__sub_I_updater_colmaker_cc = Module["__GLOBAL__sub_I_updater_colmaker_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_updater_colmaker_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_gbtree_cc = Module["__GLOBAL__sub_I_gbtree_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_gbtree_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_metric_cc = Module["__GLOBAL__sub_I_metric_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_metric_cc"].apply(null, arguments) };
-var _free_memory_model = Module["_free_memory_model"] = function() {  return Module["asm"]["_free_memory_model"].apply(null, arguments) };
+var _set_param = Module["_set_param"] = function() {  return Module["asm"]["_set_param"].apply(null, arguments) };
 var _fflush = Module["_fflush"] = function() {  return Module["asm"]["_fflush"].apply(null, arguments) };
 var ___cxa_is_pointer_type = Module["___cxa_is_pointer_type"] = function() {  return Module["asm"]["___cxa_is_pointer_type"].apply(null, arguments) };
 var _memset = Module["_memset"] = function() {  return Module["asm"]["_memset"].apply(null, arguments) };
 var _sbrk = Module["_sbrk"] = function() {  return Module["asm"]["_sbrk"].apply(null, arguments) };
 var __GLOBAL__sub_I_rank_obj_cc = Module["__GLOBAL__sub_I_rank_obj_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_rank_obj_cc"].apply(null, arguments) };
 var _memcpy = Module["_memcpy"] = function() {  return Module["asm"]["_memcpy"].apply(null, arguments) };
-var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {  return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
+var __GLOBAL__sub_I_iostream_cpp = Module["__GLOBAL__sub_I_iostream_cpp"] = function() {  return Module["asm"]["__GLOBAL__sub_I_iostream_cpp"].apply(null, arguments) };
+var ___errno_location = Module["___errno_location"] = function() {  return Module["asm"]["___errno_location"].apply(null, arguments) };
 var __GLOBAL__sub_I_elementwise_metric_cc = Module["__GLOBAL__sub_I_elementwise_metric_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_elementwise_metric_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_learner_cc = Module["__GLOBAL__sub_I_learner_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_learner_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_updater_histmaker_cc = Module["__GLOBAL__sub_I_updater_histmaker_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_updater_histmaker_cc"].apply(null, arguments) };
@@ -6521,9 +6524,9 @@ var __GLOBAL__sub_I_predictor_cc = Module["__GLOBAL__sub_I_predictor_cc"] = func
 var _pthread_mutex_unlock = Module["_pthread_mutex_unlock"] = function() {  return Module["asm"]["_pthread_mutex_unlock"].apply(null, arguments) };
 var __GLOBAL__I_000101 = Module["__GLOBAL__I_000101"] = function() {  return Module["asm"]["__GLOBAL__I_000101"].apply(null, arguments) };
 var _emscripten_get_global_libc = Module["_emscripten_get_global_libc"] = function() {  return Module["asm"]["_emscripten_get_global_libc"].apply(null, arguments) };
-var __GLOBAL__sub_I_iostream_cpp = Module["__GLOBAL__sub_I_iostream_cpp"] = function() {  return Module["asm"]["__GLOBAL__sub_I_iostream_cpp"].apply(null, arguments) };
+var _load_model = Module["_load_model"] = function() {  return Module["asm"]["_load_model"].apply(null, arguments) };
 var _pthread_cond_broadcast = Module["_pthread_cond_broadcast"] = function() {  return Module["asm"]["_pthread_cond_broadcast"].apply(null, arguments) };
-var ___errno_location = Module["___errno_location"] = function() {  return Module["asm"]["___errno_location"].apply(null, arguments) };
+var _llvm_bswap_i32 = Module["_llvm_bswap_i32"] = function() {  return Module["asm"]["_llvm_bswap_i32"].apply(null, arguments) };
 var __GLOBAL__sub_I_gbm_cc = Module["__GLOBAL__sub_I_gbm_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_gbm_cc"].apply(null, arguments) };
 var __GLOBAL__sub_I_updater_fast_hist_cc = Module["__GLOBAL__sub_I_updater_fast_hist_cc"] = function() {  return Module["asm"]["__GLOBAL__sub_I_updater_fast_hist_cc"].apply(null, arguments) };
 var ___cxa_can_catch = Module["___cxa_can_catch"] = function() {  return Module["asm"]["___cxa_can_catch"].apply(null, arguments) };

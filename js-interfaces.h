@@ -1,7 +1,3 @@
-//
-// Created by jefferson on 12/09/17.
-//
-
 #ifndef XGBOOST_JS_JS_INTERFACES_H
 #define XGBOOST_JS_JS_INTERFACES_H
 
@@ -9,6 +5,7 @@
 
 #include <utility>
 #include <iostream>
+#include <cstdio>
 
 typedef std::pair<BoosterHandle*, DMatrixHandle*>* Model;
 
@@ -21,6 +18,8 @@ void set_param(Model model, char* arg, char* value);
 void train_full_model(Model model, int iterations);
 float predict_one(Model model, float* dataset, int dimensions);
 void free_memory_model(Model model);
+char* save_model(Model model);
+Model load_model(const char* serialized);
 
 #ifdef __cplusplus
 }
