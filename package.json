@@ -1,12 +1,13 @@
 {
-  "name": "xgboost",
+  "name": "ml-xgboost",
   "version": "0.0.0",
   "description": "",
   "main": "lib/index.js",
   "module": "src/index.js",
   "files": [
     "lib",
-    "src"
+    "src",
+    "dist"
   ],
   "scripts": {
     "eslint": "eslint src",
