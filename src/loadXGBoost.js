@@ -8,7 +8,8 @@ export default function loadXGBoost(xgboost) {
     const train = xgboost.cwrap('train_full_model', null, ['number', 'number']);
     const predict_one = xgboost.cwrap('predict_one', 'number', ['number', 'array', 'number']);
     const save_model = xgboost.cwrap('save_model', 'number', ['number']);
-    const load_model = xgboost.cwrap('load_model', 'number', ['string']);
+    const get_file_content = xgboost.cwrap('get_file_content', null, ['number', 'number']);
+    const load_model = xgboost.cwrap('load_model', 'number', ['number', 'number']);
 
     const defaultOptions = {
         booster: 'gbtree',
@@ -41,7 +42,15 @@ export default function loadXGBoost(xgboost) {
          */
         constructor(options, model) {
             if(options === true) {
-                this.model = load_model(model.model);
+                var array = new Uint8Array(model.model);
+                var offset = xgboost._malloc(array.length);
+                xgboost.HEAPU8.set(array, offset);
+                this.model = load_model(offset, array.length);
+                xgboost._free(offset);
+
+                if(this.model === 0) {
+                    throw new Error("Error while loading the model!");
+                }
                 this.options = model.options;
             } else {
                 this.checkLabels = options.objective === 'multi:softmax';
@@ -99,12 +108,23 @@ export default function loadXGBoost(xgboost) {
 
         toJSON() {
             if(!this.model) throw new Error('No model trained to save');
-            var modelPointer = save_model(this.model);
-            var model = xgboost.Pointer_stringify(modelPointer);
-            xgboost._free(modelPointer);
+            var size = save_model(this.model);
+            if(size === -1) {
+                throw new Error("Error while saving the model, please report this error");
+            }
+
+            var offset = xgboost._malloc(size);
+            xgboost.HEAPU8.set(new Uint8Array(size), offset);
+            get_file_content(offset, size);
+            var array = new Array(size);
+            for(var i = 0; i < size; ++i) {
+                array[i] = xgboost.getValue(offset + i, 'i8');
+            }
+            xgboost._free(offset);
+
             return {
                 name: 'ml-xgboost',
-                model: model,
+                model: array,
                 options: this.options
             };
         }

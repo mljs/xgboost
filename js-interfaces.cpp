@@ -1,5 +1,13 @@
 #include "js-interfaces.h"
 
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <memory>
+#include <rabit/rabit.h>
+
 Model create_model(float* dataset, float* labels, int rows, int cols) {
     BoosterHandle* model = new BoosterHandle();
     DMatrixHandle* h_train = new DMatrixHandle();
@@ -31,36 +39,47 @@ float predict_one(Model model, float* dataset, int dimensions) {
     return f[0];
 }
 
-char* save_model(Model model) {
-    int success = XGBoosterSaveModel(*(model->first), "model.txt");
-    if(success < 0) return NULL;
-    FILE *f = fopen("model.txt", "rb");
-    fseek(f, 0, SEEK_END);
-    long fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);  //same as rewind(f);
-
-    char *string = (char *) malloc((fsize + 1) * sizeof(char));
-    fread(string, fsize, 1, f);
-    fclose(f);
-
-    string[fsize] = 0;
-    return string;
-}
-
-Model load_model(const char* serialized) {
-    FILE *f = fopen("model.txt", "w");
-    fprintf(f, "%s", serialized);
-    fclose(f);
-    BoosterHandle* model = new BoosterHandle();
-    int success = XGBoosterLoadModel(*model, "model.txt");
-    if(success < 0) return NULL;
-    return new std::pair<BoosterHandle*, DMatrixHandle*>(model, NULL);
-}
-
 void free_memory_model(Model model) {
     XGBoosterFree(*(model->first));
-    if(*(model->second) != NULL) {
+    if((model->second) != nullptr) {
         XGDMatrixFree(*(model->second));
     }
     delete model;
+}
+
+int save_model(Model model) {
+    int success = XGBoosterSaveModel(*(model->first), "testfile.model");
+    if(success < 0) {
+        return -1;
+    }
+
+    int size = 0;
+    std::ifstream test("testfile.model", std::ifstream::binary);
+    if(test) {
+        std::filebuf* pbuf = test.rdbuf();
+        size = static_cast<int>(pbuf->pubseekoff(0, test.end, test.in));
+        test.close();
+    }
+
+    return size;
+}
+
+void get_file_content(char* buffer, int size) {
+    std::unique_ptr<dmlc::Stream> fi(dmlc::Stream::Create("testfile.model", "r"));
+    size_t readed = fi->Read(buffer, size);
+}
+
+Model load_model(char* serialized, int size) {
+    std::unique_ptr<dmlc::Stream> fi(dmlc::Stream::Create("load.model", "w"));
+    fi->Write(serialized, size);
+    fi.reset();
+
+    BoosterHandle* loadModel = new BoosterHandle();
+    XGBoosterCreate(0, 0, loadModel);
+    int success = XGBoosterLoadModel(*loadModel, "load.model");
+    if(success < 0) {
+        return nullptr;
+    }
+
+    return new std::pair<BoosterHandle*, DMatrixHandle*>(loadModel, nullptr);
 }

@@ -4,8 +4,6 @@
 #include "xgboost/include/xgboost/c_api.h"
 
 #include <utility>
-#include <iostream>
-#include <cstdio>
 
 typedef std::pair<BoosterHandle*, DMatrixHandle*>* Model;
 
@@ -18,8 +16,9 @@ void set_param(Model model, char* arg, char* value);
 void train_full_model(Model model, int iterations);
 float predict_one(Model model, float* dataset, int dimensions);
 void free_memory_model(Model model);
-char* save_model(Model model);
-Model load_model(const char* serialized);
+int save_model(Model model);
+void get_file_content(char* buffer, int size);
+Model load_model(char* serialized, int size);
 
 #ifdef __cplusplus
 }
