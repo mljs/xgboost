@@ -19,7 +19,8 @@ export default function loadXGBoost(xgboost) {
         min_child_weight: 1,
         subsample: 0.5,
         colsample_bytree: 1,
-        silent: 1
+        silent: 1,
+        iterations: 200
     };
     /* eslint-enable camelcase */
 
@@ -38,6 +39,7 @@ export default function loadXGBoost(xgboost) {
          * @param {number} [options.subsample=0.5]
          * @param {number} [options.colsample_bytree=1]
          * @param {number} [options.silent=1]
+         * @param {number} [options.iterations=200]
          * @param {object} model - for load purposes.
          */
         constructor(options, model) {
@@ -58,6 +60,9 @@ export default function loadXGBoost(xgboost) {
             }
 
             for (var key in this.options) {
+                if(key === 'iterations') {
+                    continue;
+                }
                 this.options[key] = this.options[key].toString();
             }
         }
@@ -83,11 +88,15 @@ export default function loadXGBoost(xgboost) {
             var variables = Object.keys(this.options);
             for (var i = 0; i < variables.length; ++i) {
                 var variable = variables[i];
+                if(variable === 'iterations') {
+                    continue;
+                }
+
                 var value = this.options[variable];
                 set_param(this.model, variable, value);
             }
 
-            train(this.model, 200);
+            train(this.model, this.options.iterations);
         }
 
         /**
@@ -106,6 +115,10 @@ export default function loadXGBoost(xgboost) {
             return predictions;
         }
 
+        /**
+         * Export the current model to JSON.
+         * @return {object} - Current model.
+         */
         toJSON() {
             if(!this.model) throw new Error('No model trained to save');
             var size = save_model(this.model);
@@ -129,6 +142,11 @@ export default function loadXGBoost(xgboost) {
             };
         }
 
+        /**
+         * Load a Decision tree classifier with the given model.
+         * @param {object} model
+         * @return {XGBoost}
+         */
         static load(model) {
             if(model.name !== 'ml-xgboost') {
                 throw new RangeError(`Invalid model: ${model.name}`);

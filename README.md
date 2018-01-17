@@ -47,7 +47,7 @@ const xgboost = require('ml-xgboost');
 
 ## License
 
-[MIT](./LICENSE)
+© Contributors, 2016. Licensed under an [Apache-2](./LICENSE) license.
 
 [npm-image]: https://img.shields.io/npm/v/ml-xgboost.svg?style=flat-square
 [npm-url]: https://www.npmjs.com/package/ml-xgboost

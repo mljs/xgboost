@@ -66,7 +66,7 @@ int save_model(Model model) {
 
 void get_file_content(char* buffer, int size) {
     std::unique_ptr<dmlc::Stream> fi(dmlc::Stream::Create("testfile.model", "r"));
-    size_t readed = fi->Read(buffer, size);
+    fi->Read(buffer, size);
 }
 
 Model load_model(char* serialized, int size) {
