@@ -1,10 +1,10 @@
 import IrisDataset from 'ml-dataset-iris';
 import ConfusionMatrix from 'ml-confusion-matrix';
 
-describe('xgboost test', () => {
+describe('xgboost test (WASM)', () => {
     it('basic test on iris dataset', async () => {
-        var XGBoost = await require('..');
-        var booster = new XGBoost({
+        var XGBoostWASM = await require('..');
+        var booster = new XGBoostWASM({
             objective: 'multi:softmax'
         });
         var dataset = IrisDataset.getNumbers();
@@ -22,8 +22,8 @@ describe('xgboost test', () => {
     });
 
     it('load and save test', async () => {
-        var XGBoost = await require('..');
-        var booster = new XGBoost({
+        var XGBoostWASM = await require('..');
+        var booster = new XGBoostWASM({
             objective: 'multi:softmax'
         });
         var dataset = IrisDataset.getNumbers();
@@ -32,7 +32,7 @@ describe('xgboost test', () => {
         booster.train(dataset, trueLabels);
 
         var model = JSON.parse(JSON.stringify(booster));
-        booster = XGBoost.load(model);
+        booster = XGBoostWASM.load(model);
 
         var predictions = booster.predict(dataset);
         var cm = ConfusionMatrix.fromLabels(trueLabels, predictions);

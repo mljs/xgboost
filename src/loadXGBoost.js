@@ -43,15 +43,15 @@ export default function loadXGBoost(xgboost) {
          * @param {object} model - for load purposes.
          */
         constructor(options, model) {
-            if(options === true) {
+            if (options === true) {
                 var array = new Uint8Array(model.model);
                 var offset = xgboost._malloc(array.length);
                 xgboost.HEAPU8.set(array, offset);
                 this.model = load_model(offset, array.length);
                 xgboost._free(offset);
 
-                if(this.model === 0) {
-                    throw new Error("Error while loading the model!");
+                if (this.model === 0) {
+                    throw new Error('Error while loading the model!');
                 }
                 this.options = model.options;
             } else {
@@ -60,7 +60,7 @@ export default function loadXGBoost(xgboost) {
             }
 
             for (var key in this.options) {
-                if(key === 'iterations') {
+                if (key === 'iterations') {
                     continue;
                 }
                 this.options[key] = this.options[key].toString();
@@ -88,7 +88,7 @@ export default function loadXGBoost(xgboost) {
             var variables = Object.keys(this.options);
             for (var i = 0; i < variables.length; ++i) {
                 var variable = variables[i];
-                if(variable === 'iterations') {
+                if (variable === 'iterations') {
                     continue;
                 }
 
@@ -120,17 +120,17 @@ export default function loadXGBoost(xgboost) {
          * @return {object} - Current model.
          */
         toJSON() {
-            if(!this.model) throw new Error('No model trained to save');
+            if (!this.model) throw new Error('No model trained to save');
             var size = save_model(this.model);
-            if(size === -1) {
-                throw new Error("Error while saving the model, please report this error");
+            if (size === -1) {
+                throw new Error('Error while saving the model, please report this error');
             }
 
             var offset = xgboost._malloc(size);
             xgboost.HEAPU8.set(new Uint8Array(size), offset);
             get_file_content(offset, size);
             var array = new Array(size);
-            for(var i = 0; i < size; ++i) {
+            for (var i = 0; i < size; ++i) {
                 array[i] = xgboost.getValue(offset + i, 'i8');
             }
             xgboost._free(offset);
@@ -148,7 +148,7 @@ export default function loadXGBoost(xgboost) {
          * @return {XGBoost}
          */
         static load(model) {
-            if(model.name !== 'ml-xgboost') {
+            if (model.name !== 'ml-xgboost') {
                 throw new RangeError(`Invalid model: ${model.name}`);
             }
 

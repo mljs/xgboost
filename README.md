@@ -16,7 +16,41 @@
 ## Example
 
 ```js
-const xgboost = require('ml-xgboost');
+import IrisDataset from 'ml-dataset-iris';
+
+require('ml-xgboost').then(XGBoost => {
+    var booster = new XGBoost({
+        booster: 'gbtree',
+        objective: 'multi:softmax',
+        max_depth: 5,
+        eta: 0.1,
+        min_child_weight: 1,
+        subsample: 0.5,
+        colsample_bytree: 1,
+        silent: 1,
+        iterations: 200
+    });
+
+    var trainingSet = IrisDataset.getNumbers();
+    var predictions = IrisDataset.getClasses().map(
+        (elem) => IrisDataset.getDistinctClasses().indexOf(elem)
+    );
+
+    booster.train(dataset, trueLabels);
+    var predictDataset = /* something to predict */
+    var predictions = booster.predict(predictDataset);
+
+    // don't forget to free your model
+    booster.free()
+
+    // you can save your model in this way
+    var model = JSON.stringify(booster); // string
+    // or
+    var model = booster.toJSON(); // object
+
+    // and load it
+    var anotherBooster = XGBoost.load(model); // model is an object, not a string
+});
 ```
 
 ## Development
