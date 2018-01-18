@@ -1,3 +1,3 @@
 import loadXGBoost from './loadXGBoost';
-const xgboostWASM = require('../dist/wasm/xgboost');
+import * as xgboostWASM from '../dist/wasm/xgboost';
 module.exports = xgboostWASM.isReady.then(l => loadXGBoost(l));
