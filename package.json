@@ -19,15 +19,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ml/xgboost.git"
+    "url": "git+https://github.com/mljs/xgboost.git"
   },
   "keywords": [],
   "author": "Jefferson Javier Hernández Panqueba",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ml/xgboost/issues"
+    "url": "https://github.com/mljs/xgboost/issues"
   },
-  "homepage": "https://github.com/ml/xgboost#readme",
+  "homepage": "https://github.com/mljs/xgboost#readme",
   "jest": {
     "testEnvironment": "node"
   },
