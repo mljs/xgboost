@@ -24,24 +24,23 @@ export default function loadXGBoost(xgboost) {
   };
     /* eslint-enable camelcase */
 
-    /**
-     * @class XGBoost
-     */
+
   class XGBoost {
 
     /**
-         * @param {object} options - Same parameters described [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md), Default parameters below.
-         * @param {string} [options.booster='gbtree']
-         * @param {string} [options.objective='reg:linear']
-         * @param {number} [options.max_depth=5]
-         * @param {number} [options.eta=0.1]
-         * @param {number} [options.min_child_weight=1]
-         * @param {number} [options.subsample=0.5]
-         * @param {number} [options.colsample_bytree=1]
-         * @param {number} [options.silent=1]
-         * @param {number} [options.iterations=200]
-         * @param {object} model - for load purposes.
-         */
+     * @constructor
+     * @param {object} options - Same parameters described [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md), Default parameters below.
+     * @param {string} [options.booster='gbtree']
+     * @param {string} [options.objective='reg:linear']
+     * @param {number} [options.max_depth=5]
+     * @param {number} [options.eta=0.1]
+     * @param {number} [options.min_child_weight=1]
+     * @param {number} [options.subsample=0.5]
+     * @param {number} [options.colsample_bytree=1]
+     * @param {number} [options.silent=1]
+     * @param {number} [options.iterations=200]
+     * @param {object} model - for load purposes.
+     */
     constructor(options, model) {
       if (options === true) {
         var array = new Uint8Array(model.model);
@@ -68,10 +67,10 @@ export default function loadXGBoost(xgboost) {
     }
 
     /**
-         * Train the decision tree with the given training set and labels.
-         * @param {Matrix|Array<Array<number>>} trainingSet
-         * @param {Array<number>} trainingValues
-         */
+     * Train the decision tree with the given training set and labels.
+     * @param {Matrix|Array<Array<number>>} trainingSet
+     * @param {Array<number>} trainingValues
+     */
     train(trainingSet, trainingValues) {
       if (this.checkLabels) {
         /* eslint-disable camelcase */
@@ -100,10 +99,10 @@ export default function loadXGBoost(xgboost) {
     }
 
     /**
-         * Predicts the output given the matrix to predict.
-         * @param {Matrix|Array<Array<number>>} toPredict
-         * @return {Array<number>} predictions
-         */
+     * Predicts the output given the matrix to predict.
+     * @param {Matrix|Array<Array<number>>} toPredict
+     * @return {Array<number>} predictions
+     */
     predict(toPredict) {
       var Xtest = Matrix.checkMatrix(toPredict);
       var predictions = new Array(Xtest.rows);
@@ -116,9 +115,9 @@ export default function loadXGBoost(xgboost) {
     }
 
     /**
-         * Export the current model to JSON.
-         * @return {object} - Current model.
-         */
+     * Export the current model to JSON.
+     * @return {object} - Current model.
+     */
     toJSON() {
       if (!this.model) throw new Error('No model trained to save');
       var size = save_model(this.model);
@@ -143,10 +142,10 @@ export default function loadXGBoost(xgboost) {
     }
 
     /**
-         * Load a Decision tree classifier with the given model.
-         * @param {object} model
-         * @return {XGBoost}
-         */
+     * Load a Decision tree classifier with the given model.
+     * @param {object} model
+     * @return {XGBoost}
+     */
     static load(model) {
       if (model.name !== 'ml-xgboost') {
         throw new RangeError(`Invalid model: ${model.name}`);
@@ -156,12 +155,12 @@ export default function loadXGBoost(xgboost) {
     }
 
     /**
-         * Free the memory allocated for the model. Since this memory is stored in the memory model of emscripten,
-         * it is allocated within an ArrayBuffer and WILL NOT BE GARBARGE COLLECTED, you have to explicitly free it.
-         * So not calling this will result in memory leaks. As of today in the browser, there is no way to hook the
-         * garbage collection of the SVM object to free it automatically. Free the memory that was created by the
-         * compiled xgboost library to. store the model. This model is reused every time the predict method is called.
-         */
+     * Free the memory allocated for the model. Since this memory is stored in the memory model of emscripten,
+     * it is allocated within an ArrayBuffer and WILL NOT BE GARBARGE COLLECTED, you have to explicitly free it.
+     * So not calling this will result in memory leaks. As of today in the browser, there is no way to hook the
+     * garbage collection of the XGBoost object to free it automatically. Free the memory that was created by the
+     * compiled XGBoost library to. store the model. This model is reused every time the predict method is called.
+     */
     free() {
       free_model(this.model);
     }
