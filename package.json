@@ -33,15 +33,15 @@
   },
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
-    "eslint": "^4.6.1",
-    "eslint-config-cheminfo": "^1.9.1",
-    "eslint-plugin-jest": "^21.6.1",
+    "eslint": "^4.16.0",
+    "eslint-config-cheminfo": "^1.14.1",
+    "eslint-plugin-jest": "^21.7.0",
     "eslint-plugin-no-only-tests": "^2.0.0",
-    "jest": "^21.1.0",
+    "jest": "^21.2.1",
     "ml-confusion-matrix": "^0.3.0",
     "ml-dataset-iris": "^1.0.0",
-    "npm-run-all": "^4.1.1",
-    "rollup": "^0.49.2"
+    "npm-run-all": "^4.1.2",
+    "rollup": "^0.49.3"
   },
   "dependencies": {
     "libsvm-js": "^0.1.3",

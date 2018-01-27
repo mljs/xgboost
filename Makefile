@@ -16,6 +16,9 @@ EXPORTED_FUNCTIONS="['_create_model', '_set_param', '_train_full_model', '_predi
 COMPILED_FILES = xgboost/lib/libxgboost.so
 
 all:
+	cp replace-files/dmlc-core/base.h ./xgboost/dmlc-core/include/dmlc/base.h;
+	cp replace-files/rabit/base.h ./xgboost/rabit/include/dmlc/base.h;
+	cp replace-files/xgboost/c_api.h ./xgboost/include/xgboost/c_api.h;
 	cd xgboost; make -j4 config=../make/minimum.mk; cd ..;
 	mkdir -p $(BUILD_DIR)/wasm;
 	$(CXX) $(CFLAGS) js-interfaces.cpp $(COMPILED_FILES) -o $(BUILD_DIR)/wasm/xgboost.js --pre-js src/wasmPreJS.js -s WASM=1 -s "BINARYEN_METHOD='native-wasm'" -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS)
@@ -23,4 +26,4 @@ all:
 	# $(CXX) $(CFLAGS) js-interfaces.cpp $(COMPILED_FILES) -o $(BUILD_DIR)/asm/xgboost.js --pre-js src/asmPreJS.js -s EXPORTED_FUNCTIONS=$(EXPORTED_FUNCTIONS) #-s ALLOW_MEMORY_GROWTH=1
 
 clean:
-	cd xgboost; make clean_all; cd ..;
+	cd xgboost; make clean_all; cd ..; rm -rf dist;
