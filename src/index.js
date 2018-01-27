@@ -1,9 +1,3 @@
-'use strict';
-
-const defaultOptions = {};
-
-function xgboost(options) {
-    options = Object.assign({}, defaultOptions, options);
-}
-
-module.exports = xgboost;
+import loadXGBoost from './loadXGBoost';
+import * as xgboostWASM from '../dist/wasm/xgboost';
+module.exports = xgboostWASM.isReady.then((l) => loadXGBoost(l));
