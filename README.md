@@ -57,27 +57,29 @@ require('ml-xgboost').then(XGBoost => {
 
 * You should have [emscripten](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) installed on your computer and be able to use `emcc` and `em++`.
 * Download the repo: `git clone --recursive https://github.com/mljs/xgboost`
-* change lines inside of the xgboost library files:
-    * dmlc-core/include/dmlc/base.h line 45 [here](./xgboost/dmlc-core/include/dmlc/base.h)
-    * rabit/include/dmlc/base.h line 45 [here](./xgboost/rabit/include/dmlc/base.h)
+* Run `npm run build` or `make` at the root directory.
 
-       ```C++
-       #if (!defined(DMLC_LOG_STACK_TRACE) && defined(__GNUC__) && !defined(__MINGW32__))
-       #define DMLC_LOG_STACK_TRACE 1
-       #undef DMLC_LOG_STACK_TRACE
-       #endif
-       ```
-       **Note**: this is to avoid compilation issues with the execinfo.h library that is not needed in the JS library
-    * in case that you get the following error:
+## XGBoost lib files changed
 
-        `./xgboost/include/xgboost/c_api.h:29:9: error: unknown type name 'uint64_t'`
+* dmlc-core/include/dmlc/base.h line 45 [here](./xgboost/dmlc-core/include/dmlc/base.h)
+* rabit/include/dmlc/base.h line 45 [here](./xgboost/rabit/include/dmlc/base.h)
 
-        just add this import at the beginning of [this](./xgboost/include/xgboost/c_api.h) file after the first `define`:
+   ```C++
+   #if (!defined(DMLC_LOG_STACK_TRACE) && defined(__GNUC__) && !defined(__MINGW32__))
+   #define DMLC_LOG_STACK_TRACE 1
+   #undef DMLC_LOG_STACK_TRACE
+   #endif
+   ```
+   **Note**: this is to avoid compilation issues with the execinfo.h library that is not needed in the JS library
+* in case that you get the following error:
 
-        ```C++
-        #include <stdint.h>
-        ```
-* Run `npm run build` at the root directory.
+    `./xgboost/include/xgboost/c_api.h:29:9: error: unknown type name 'uint64_t'`
+
+    just add this import at the beginning of [this](./xgboost/include/xgboost/c_api.h) file after the first `define`:
+
+    ```C++
+    #include <stdint.h>
+    ```
 
 ## License
 
