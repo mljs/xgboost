@@ -1,3 +1,4 @@
 [submodule "xgboost"]
 	path = xgboost
 	url = https://github.com/dmlc/xgboost.git
+	ignore = dirty
