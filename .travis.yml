@@ -16,3 +16,4 @@ before_install:
 
 script:
   - docker exec -it emscripten make
+  - npm run test
