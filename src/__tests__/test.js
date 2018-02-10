@@ -43,5 +43,13 @@ describe('xgboost test (WASM)', () => {
 
     booster.free();
   });
+
+  it('load from file', async () => {
+    var XGBoost = await require('..');
+    var booster = XGBoost.loadFromFile('./models/output.model');
+    var dataset = IrisDataset.getNumbers();
+
+    console.log(booster.predict(dataset));
+  });
 });
 

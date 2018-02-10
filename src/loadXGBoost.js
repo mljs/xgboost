@@ -1,4 +1,5 @@
 import Matrix from 'ml-matrix';
+import fs from 'fs';
 
 export default function loadXGBoost(xgboost) {
   /* eslint-disable camelcase */
@@ -152,6 +153,16 @@ export default function loadXGBoost(xgboost) {
       }
 
       return new XGBoost(true, model);
+    }
+
+    static loadFromFile(filepath) {
+      var binary = fs.readFileSync(filepath);
+      return new XGBoost(true, {
+        model: binary,
+        options: {
+          objective: 'multi:softmax'
+        }
+      });
     }
 
     /**
