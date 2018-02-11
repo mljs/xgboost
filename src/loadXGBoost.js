@@ -186,6 +186,15 @@ export default function loadXGBoost(xgboost) {
       return new XGBoost(true, model);
     }
 
+    /**
+     * Load a model trained from other programming language
+     * @param {string} filepath
+     * @param {object} options
+     * @param {Array} [options.labels] - Some classifiers are trained with a one-hot encoder (Ex: Python API) so the
+     * current classifier returns the probability of each class, if you want the single predictions, you should provide
+     * an array with the corresponding labels, if you are doing regression you should ignore this option
+     * @return {XGBoost} model
+     */
     static loadFromModel(filepath, options = {}) {
       var binary = fs.readFileSync(filepath);
       return new XGBoost(true, {
