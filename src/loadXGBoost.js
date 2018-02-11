@@ -7,7 +7,8 @@ export default function loadXGBoost(xgboost) {
   const free_model = xgboost.cwrap('free_memory_model', null, ['number']);
   const set_param = xgboost.cwrap('set_param', null, ['number', 'string', 'string']);
   const train = xgboost.cwrap('train_full_model', null, ['number', 'number']);
-  const predict_one = xgboost.cwrap('predict_one', 'number', ['number', 'array', 'number']);
+  const predict_one = xgboost.cwrap('predict_one', 'number', ['number', 'array', 'number', 'number']);
+  const predict_size = xgboost.cwrap('prediction_size', 'number', ['number', 'array', 'number', 'number']);
   const save_model = xgboost.cwrap('save_model', 'number', ['number']);
   const get_file_content = xgboost.cwrap('get_file_content', null, ['number', 'number']);
   const load_model = xgboost.cwrap('load_model', 'number', ['number', 'number']);
@@ -21,7 +22,8 @@ export default function loadXGBoost(xgboost) {
     subsample: 0.5,
     colsample_bytree: 1,
     silent: 1,
-    iterations: 200
+    iterations: 200,
+    predictionSize: 1
   };
     /* eslint-enable camelcase */
 
@@ -60,7 +62,7 @@ export default function loadXGBoost(xgboost) {
       }
 
       for (var key in this.options) {
-        if (key === 'iterations') {
+        if (key === 'iterations' || key === 'labels') {
           continue;
         }
         this.options[key] = this.options[key].toString();
@@ -107,9 +109,38 @@ export default function loadXGBoost(xgboost) {
     predict(toPredict) {
       var Xtest = Matrix.checkMatrix(toPredict);
       var predictions = new Array(Xtest.rows);
+      var predictionSize = predict_size(this.model, new Uint8Array(Float32Array.from(Xtest.getRow(0)).buffer), Xtest.columns, undefined);
+      if (this.options.labels && this.options.labels.length !== predictionSize) {
+        throw new RangeError(`The number of labels is not the same as the prediction size. Labels: ${this.options.labels.length}, Prediction size: ${predictionSize}`);
+      }
+
       for (var i = 0; i < Xtest.rows; i++) {
         var current = Xtest.getRow(i);
-        predictions[i] = predict_one(this.model, new Uint8Array(Float32Array.from(current).buffer), Xtest.columns);
+        var predictionPointer = xgboost._malloc(predictionSize * 4);
+        xgboost.HEAPF32.set(new Float32Array(predictionSize), predictionPointer / 4);
+
+
+        predictionSize = predict_one(this.model, new Uint8Array(Float32Array.from(current).buffer), Xtest.columns, predictionPointer);
+
+        var isSizeOne = predictionSize === 1;
+        var prediction = isSizeOne ? xgboost.getValue(predictionPointer, 'float') : new Array(predictionSize);
+        if (!isSizeOne) {
+          for (var j = 0; j < predictionSize; ++j) {
+            prediction[j] = xgboost.getValue(predictionPointer + j * 4, 'float');
+          }
+        }
+        predictions[i] = prediction;
+        xgboost._free(predictionPointer);
+      }
+
+      if (this.options.labels) {
+        var predictedLabels = new Array(predictions.length);
+        predictions = Matrix.checkMatrix(predictions);
+        for (i = 0; i < predictions.length; ++i) {
+          predictedLabels[i] = predictions.maxRowIndex(i)[1];
+        }
+
+        predictions = predictedLabels;
       }
 
       return predictions;
@@ -155,13 +186,11 @@ export default function loadXGBoost(xgboost) {
       return new XGBoost(true, model);
     }
 
-    static loadFromFile(filepath) {
+    static loadFromModel(filepath, options = {}) {
       var binary = fs.readFileSync(filepath);
       return new XGBoost(true, {
         model: binary,
-        options: {
-          objective: 'multi:softmax'
-        }
+        options: options
       });
     }
 
