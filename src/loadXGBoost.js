@@ -1,5 +1,7 @@
-import Matrix from 'ml-matrix';
 import fs from 'fs';
+
+import Matrix from 'ml-matrix';
+
 
 export default function loadXGBoost(xgboost) {
   /* eslint-disable camelcase */
