@@ -70,4 +70,3 @@ describe('xgboost test (WASM)', () => {
     booster.free();
   });
 });
-

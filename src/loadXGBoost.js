@@ -139,7 +139,7 @@ export default function loadXGBoost(xgboost) {
         var predictedLabels = new Array(predictions.length);
         predictions = Matrix.checkMatrix(predictions);
         for (i = 0; i < predictions.length; ++i) {
-          predictedLabels[i] = predictions.maxRowIndex(i)[1];
+          predictedLabels[i] = this.options.labels[predictions.maxRowIndex(i)[1]];
         }
 
         predictions = predictedLabels;
