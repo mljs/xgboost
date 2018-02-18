@@ -1,4 +1,5 @@
 const path = require('path');
+
 var Module = module.exports = {};
 if (typeof self === 'undefined') {
 // When loaded with nodejs, the absolute file path is needed

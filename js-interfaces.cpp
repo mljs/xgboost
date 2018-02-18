@@ -28,15 +28,31 @@ void train_full_model(Model model, int iterations) {
     }
 }
 
-float predict_one(Model model, float* dataset, int dimensions) {
+long prediction_size(Model model, float* dataset, int dimensions, const float** output) {
     DMatrixHandle h_test;
     XGDMatrixCreateFromMat(dataset, 1, dimensions, -1, &h_test);
     bst_ulong out_len;
-    const float *f;
-    XGBoosterPredict(*(model->first), h_test, 0, 0, &out_len, &f);
+    XGBoosterPredict(*(model->first), h_test, 0, 0, &out_len, output);
     XGDMatrixFree(h_test);
+    return out_len;
+}
 
-    return f[0];
+long predict_one(Model model, float* dataset, int dimensions, float* prediction) {
+
+    const float* output = nullptr;
+    bst_ulong out_len = prediction_size(model, dataset, dimensions, &output);
+/*
+    DMatrixHandle h_test;
+    XGDMatrixCreateFromMat(dataset, 1, dimensions, -1, &h_test);
+    bst_ulong out_len;
+    const float* output;
+    XGBoosterPredict(*(model->first), h_test, 0, 0, &out_len, &output);*/
+
+    for(bst_ulong i = 0; i < out_len; ++i) {
+        prediction[i] = output[i];
+    }
+
+    return static_cast<long>(out_len);
 }
 
 void free_memory_model(Model model) {
