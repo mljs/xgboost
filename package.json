@@ -13,7 +13,7 @@
     "build": "rimraf dist && make clean && make",
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
-    "prepublishOnly": "cp ./dist/wasm/xgboost.wasm ./lib/ && rollup -c",
+    "prepublishOnly": "mkdir -p lib && cp ./dist/wasm/xgboost.wasm ./lib/ && rollup -c",
     "test": "run-s testonly eslint",
     "testonly": "jest"
   },
