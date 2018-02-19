@@ -55,11 +55,11 @@ require('ml-xgboost').then(XGBoost => {
 
 ## Development
 
-* You should have [emscripten](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) installed on your computer and be able to use `emcc` and `em++`.
+* You should have [emscripten sdk-1.37.22](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html) installed on your computer and be able to use `emcc` and `em++`.
 * Download the repo: `git clone --recursive https://github.com/mljs/xgboost`
 * Run `npm run build` or `make` at the root directory.
 
-## XGBoost lib files changed
+## XGBoost library files changed
 
 * dmlc-core/include/dmlc/base.h line 45 [here](./xgboost/dmlc-core/include/dmlc/base.h)
 * rabit/include/dmlc/base.h line 45 [here](./xgboost/rabit/include/dmlc/base.h)
