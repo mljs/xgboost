@@ -1,3 +1,13 @@
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/mljs/xgboost/compare/v1.1.1...v1.1.2) (2018-02-19)
+
+
+### Bug Fixes
+
+* change import to require because rollup doesn't transpile it well ([baaae20](https://github.com/mljs/xgboost/commit/baaae20))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/mljs/xgboost/compare/v1.1.0...v1.1.1) (2018-02-19)
 
