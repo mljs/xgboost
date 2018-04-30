@@ -13,7 +13,13 @@ CFLAGS = -O3 -Wall -fPIC --memory-init-file 0 -std=c++11
 CFLAGS += -I$(DMLC_CORE)/include -I$(RABIT)/include -Ixgboost/include
 BUILD_DIR=dist
 EXPORTED_FUNCTIONS="['_create_model', '_set_param', '_train_full_model', '_predict_one', '_free_memory_model', '_save_model', '_get_file_content', '_load_model', '_prediction_size']"
-COMPILED_FILES = xgboost/lib/libxgboost.so
+
+UNAME=$(shell uname)
+ifeq ($(UNAME), Darwin)
+	COMPILED_FILES = xgboost/lib/libxgboost.dylib
+else
+	COMPILED_FILES = xgboost/lib/libxgboost.so
+endif
 
 all: replace build
 
