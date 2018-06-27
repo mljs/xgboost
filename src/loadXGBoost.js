@@ -35,14 +35,24 @@ export default function loadXGBoost(xgboost) {
     /**
      * @constructor
      * @param {object} options - Same parameters described [here](https://github.com/dmlc/xgboost/blob/master/doc/parameter.md), Default parameters below.
-     * @param {string} [options.booster='gbtree']
-     * @param {string} [options.objective='reg:linear']
-     * @param {number} [options.max_depth=5]
-     * @param {number} [options.eta=0.1]
-     * @param {number} [options.min_child_weight=1]
-     * @param {number} [options.subsample=0.5]
-     * @param {number} [options.colsample_bytree=1]
-     * @param {number} [options.silent=1]
+     * @param {string} [options.booster='gbtree'] - which booster to use, can be gbtree, gblinear or dart. gbtree and dart use tree
+     * based model while gblinear uses linear function.
+     * @param {string} [options.objective='reg:linear'] - The learning objective. Options are "reg:linear", "reg:logistic", "binary:logistic",
+     * "binary:logitraw", "gpu:reg:linear", "gpu:reg:logistic", "gpu:binary:logistic", gpu:binary:logitraw", "count:poisson", 
+     * "survival:cox", "multi:softmax", "multi:softprob", "rank:pairwise", "reg:gamma", "reg:tweedie".
+     * @param {number} [options.max_depth=5] - maximum depth of a tree, increase this value will make the model more complex / likely
+     * to be overfitting. 0 indicates no limit, limit is required for depth-wise grow policy.
+     * @param {number} [options.eta=0.1] - step size shrinkage used in update to prevents overfitting. After each boosting step, 
+     * we can directly get the weights of new features. and eta actually shrinks the feature weights to make the boosting process 
+     * more conservative.
+     * @param {number} [options.min_child_weight=1] - minimum sum of instance weight (hessian) needed in a child. If the tree partition
+     * step results in a leaf node with the sum of instance weight less than min_child_weight, then the building process will give up
+     * further partitioning. In linear regression mode, this simply corresponds to minimum number of instances needed to be in each
+     * node. The larger, the more conservative the algorithm will be.
+     * @param {number} [options.subsample=0.5] - subsample ratio of the training instance. Setting it to 0.5 means that XGBoost randomly
+     * collected half of the data instances to grow trees and this will prevent overfitting.
+     * @param {number} [options.colsample_bytree=1] - subsample ratio of columns when constructing each tree.
+     * @param {number} [options.silent=1] - 0 means printing running messages, 1 means silent mode.
      * @param {number} [options.iterations=200]
      * @param {object} model - for load purposes.
      */
